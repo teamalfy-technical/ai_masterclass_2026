@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { brandConfig, getDownloadById, getDownloadsForAudience } from "@/lib/course-data";
+import { brandConfig, getDownloadById, getDownloadsForAudience, chapterStories } from "@/lib/course-data";
 import { learnerContentMap, learnerInterstitials, LearnerTabUI } from "@/lib/learner-content";
 import type { Module, StorySection } from "@/types/course";
 
@@ -142,6 +142,58 @@ function CoachPanel({ onJump }: { onJump: (sectionId: string) => void }) {
   );
 }
 
+function ChapterStoryPanel({ moduleSlug, presenterMode }: { moduleSlug: string; presenterMode: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const story = chapterStories[moduleSlug];
+  if (!story) return null;
+
+  return (
+    <div className="story-wrapper">
+      <button
+        className={`story-trigger-btn ${isOpen ? "active" : ""}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="story-trigger-icon">📖</span>
+        <span>Chapter Story{isOpen ? ": " + story.title : ""}</span>
+        <span className="story-trigger-chevron">{isOpen ? "▲" : "▼"}</span>
+      </button>
+
+      {isOpen && (
+        <div className={`story-panel ${presenterMode ? "story-panel-tutor" : "story-panel-learner"}`}>
+          <div className="story-image-col">
+            <Image
+              src={story.image}
+              alt={story.title}
+              width={600}
+              height={340}
+              className="story-image"
+              style={{ objectFit: "cover", borderRadius: "var(--radius-md)" }}
+            />
+          </div>
+          <div className="story-text-col">
+            <h3 className="story-title">{story.title}</h3>
+            {presenterMode ? (
+              <>
+                <p className="story-narrative">{story.storyText}</p>
+                <div className="story-teaching-block">
+                  <span className="eyebrow">Teaching Point</span>
+                  <p>{story.teachingPoint}</p>
+                </div>
+                <div className="story-bridge-block">
+                  <span className="eyebrow">Bridge Line</span>
+                  <p><em>&ldquo;{story.bridgeLine}&rdquo;</em></p>
+                </div>
+              </>
+            ) : (
+              <p className="story-learner-tagline">A story to set the scene for this chapter&hellip;</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function PresentationShell({
   initialModules,
   initialStorySections,
@@ -264,6 +316,8 @@ export function PresentationShell({
                       <h2>{currentModule.title}</h2>
                       <p className="summary">{currentModule.objective}</p>
                     </div>
+
+                    <ChapterStoryPanel moduleSlug={currentModule.slug} presenterMode={presenterMode} />
                     
                     {presenterMode ? (
                       <>
