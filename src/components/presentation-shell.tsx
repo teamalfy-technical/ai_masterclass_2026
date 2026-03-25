@@ -1,19 +1,13 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  brandConfig,
-  downloads,
-  getDownloadById,
-  getDownloadsForAudience,
-  modules,
-  storySections,
-} from "@/lib/course-data";
-import type { StorySection } from "@/types/course";
+import { useEffect, useRef, useState } from "react";
+import { brandConfig, getDownloadById, getDownloadsForAudience } from "@/lib/course-data";
+import { learnerContentMap, learnerInterstitials, LearnerTabUI } from "@/lib/learner-content";
+import type { Module, StorySection } from "@/types/course";
 
+// Define the CoachState type
 type CoachState = {
   status: "idle" | "loading" | "ready" | "error";
   question: string;
@@ -28,229 +22,8 @@ type CoachState = {
   };
 };
 
-function SectionPanel({
-  section,
-  presenterMode,
-  notesOpen,
-  isActive,
-}: {
-  section: StorySection;
-  presenterMode: boolean;
-  notesOpen: boolean;
-  isActive: boolean;
-}) {
-  const currentModule = section.moduleSlug
-    ? modules.find((entry) => entry.slug === section.moduleSlug)
-    : undefined;
-
-  const visibleDownloads = presenterMode ? downloads : getDownloadsForAudience("learner");
-
-  const linkedDownloads = currentModule?.downloads
-    .map((downloadId) => getDownloadById(downloadId))
-    .filter(
-      (download) =>
-        Boolean(download) && (presenterMode || download?.audience === "learner"),
-    );
-
-  return (
-    <section
-      id={section.id}
-      data-section-id={section.id}
-      className={`scene scene-${section.kind} ${isActive ? "is-active" : ""}`}
-    >
-      <div className="scene-inner">
-        <div className="scene-copy">
-          <p className="eyebrow">{section.eyebrow}</p>
-          <h2>{section.title}</h2>
-          <p className="scene-summary">{section.summary}</p>
-
-          {section.kind === "hero" ? (
-            <div className="hero-grid">
-              <div>
-                <ul className="signal-list">
-                  <li>8 focused hours on how modern AI systems create value and risk</li>
-                  <li>Practical coverage of Codex, OpenClaw, governance, and pilot design</li>
-                  <li>A shareable course surface with learner resources built in</li>
-                </ul>
-                <div className="hero-actions">
-                  <a href="#day-1" className="primary-action">
-                    Enter story mode
-                  </a>
-                  <Link href="/downloads" className="secondary-action">
-                    Open downloads
-                  </Link>
-                </div>
-              </div>
-              <div className="hero-brand-block">
-                <div className="brand-mark-wrap">
-                  <Image
-                    src="/brand/ananseum-wordmark-dark.svg"
-                    alt="Ananseum"
-                    className="brand-wordmark"
-                    width={320}
-                    height={88}
-                  />
-                </div>
-                <p>A practical course for leaders deciding where AI fits, where it does not, and how to pilot it responsibly.</p>
-                <p className="muted">
-                  Clear systems thinking, bounded automation, strong review loops, and deliberate use of tools.
-                </p>
-              </div>
-            </div>
-          ) : null}
-
-          {currentModule ? (
-            <div className="module-grid">
-              <div className="module-card">
-                <span>Core idea</span>
-                <p>{currentModule.objective}</p>
-              </div>
-              <div className="module-card">
-                <span>What this section establishes</span>
-                <p>{currentModule.deliveryLead ?? currentModule.objective}</p>
-              </div>
-              <div className="module-card">
-                <span>Key points to leave with</span>
-                <ul>
-                  {currentModule.talkingPoints.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="module-card">
-                <span>Workshop prompt</span>
-                <p>{currentModule.exercise.title}</p>
-                <p className="muted">{currentModule.exercise.prompt}</p>
-              </div>
-              <div className="module-card">
-                <span>Why it matters</span>
-                <p>{currentModule.takeaway}</p>
-              </div>
-            </div>
-          ) : null}
-
-          {section.kind === "demos" ? (
-            <div className="module-grid">
-              <div className="module-card">
-                <span>What participants will see</span>
-                <ul>
-                  <li>Prompt/context quality comparison</li>
-                  <li>End-to-end Codex software task</li>
-                  <li>OpenClaw orchestration walkthrough</li>
-                </ul>
-              </div>
-              <div className="module-card">
-                <span>Why the demos matter</span>
-                <p>Each demo makes the system visible: what context it needs, what controls matter, and how a human should judge the result.</p>
-              </div>
-            </div>
-          ) : null}
-
-          {section.kind === "downloads" ? (
-            <>
-              <div className="module-grid">
-                <div className="module-card">
-                  <span>Learner materials</span>
-                  <p>These are the participant-facing assets: course guide, summaries, workbook, blueprint, and reference sheet.</p>
-                </div>
-                {presenterMode ? (
-                  <div className="module-card">
-                    <span>Presenter materials</span>
-                    <p>Presenter mode exposes the course-owner pack with delivery notes, runbook, and demo guidance.</p>
-                  </div>
-                ) : null}
-              </div>
-              <div className="downloads-inline">
-                {visibleDownloads.map((download) => (
-                  <a key={download.id} href={download.file} className="download-pill" download>
-                    <strong>{download.title}</strong>
-                    <span>{download.category}</span>
-                  </a>
-                ))}
-              </div>
-            </>
-          ) : null}
-
-          {section.kind === "capstone" ? (
-            <div className="module-grid">
-              <div className="module-card">
-                <span>What the capstone produces</span>
-                <ul>
-                  <li>A named workflow with a real user group</li>
-                  <li>A control model for approvals, risk, and containment</li>
-                  <li>Success metrics and a go / no-go threshold</li>
-                  <li>A 30-60-90 day next step</li>
-                </ul>
-              </div>
-              <div className="module-card">
-                <span>Template</span>
-                <a href="/downloads/learner/pilot-blueprint-template.md" download className="secondary-action inline-action">
-                  Download the blueprint
-                </a>
-              </div>
-            </div>
-          ) : null}
-
-          {section.kind === "final" ? (
-            <div className="module-grid">
-              <div className="module-card">
-                <span>What participants leave with</span>
-                <ul>
-                  <li>A mental model for modern AI systems</li>
-                  <li>Operational understanding of Codex and OpenClaw</li>
-                  <li>One realistic adoption blueprint</li>
-                </ul>
-              </div>
-              <div className="module-card">
-                <span>Continue</span>
-                <p>Share the site as a cohort resource before, during, and after delivery.</p>
-              </div>
-            </div>
-          ) : null}
-
-          {linkedDownloads?.length ? (
-            <div className="support-links">
-              {linkedDownloads.map((download) => (
-                <a key={download?.id} href={download?.file} download>
-                  {download?.title}
-                </a>
-              ))}
-              <Link href={currentModule ? `/modules/${currentModule.slug}` : "/downloads"}>
-                Open full module page
-              </Link>
-            </div>
-          ) : null}
-        </div>
-
-        <AnimatePresence initial={false}>
-          {presenterMode && notesOpen && section.speakerNote ? (
-            <motion.aside
-              className="notes-panel"
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 24 }}
-            >
-              <p className="notes-label">Presenter notes</p>
-              <p>{section.speakerNote}</p>
-              {currentModule ? (
-                <>
-                  <p className="notes-label">Facilitator cue</p>
-                  <p>{currentModule.speakerNotes[1] ?? currentModule.speakerNotes[0]}</p>
-                </>
-              ) : null}
-            </motion.aside>
-          ) : null}
-        </AnimatePresence>
-      </div>
-    </section>
-  );
-}
-
-function CoachPanel({
-  onJump,
-}: {
-  onJump: (sectionId: string) => void;
-}) {
+function CoachPanel({ onJump }: { onJump: (sectionId: string) => void }) {
+  const [isOpen, setIsOpen] = useState(false);
   const [state, setState] = useState<CoachState>({
     status: "idle",
     question: "",
@@ -259,10 +32,7 @@ function CoachPanel({
 
   async function submitQuestion() {
     const question = state.question.trim();
-    if (!question) {
-      return;
-    }
-
+    if (!question) return;
     setState((current) => ({ ...current, status: "loading" }));
 
     try {
@@ -272,19 +42,13 @@ function CoachPanel({
         body: JSON.stringify({ question }),
       });
 
-      if (!response.ok) {
-        throw new Error("Request failed.");
-      }
+      if (!response.ok) throw new Error("Request failed.");
 
       const payload = (await response.json()) as Omit<CoachState, "status" | "question">;
       setState((current) => ({
         ...current,
         status: "ready",
-        answer: payload.answer,
-        recommendedSectionId: payload.recommendedSectionId,
-        recommendedModuleSlug: payload.recommendedModuleSlug,
-        relatedDownloads: payload.relatedDownloads,
-        quiz: payload.quiz,
+        ...payload,
       }));
     } catch {
       setState((current) => ({
@@ -296,83 +60,97 @@ function CoachPanel({
   }
 
   return (
-    <aside className="coach-panel">
-      <div className="coach-head">
-        <p className="eyebrow">AI Quiz Coach</p>
-        <h3>Ask about a module or test understanding</h3>
-      </div>
-      <label className="coach-label" htmlFor="coach-question">
-        Ask a course question
-      </label>
-      <textarea
-        id="coach-question"
-        value={state.question}
-        onChange={(event) =>
-          setState((current) => ({ ...current, question: event.target.value }))
-        }
-        placeholder="Example: Where should I start if I want to understand Codex approvals?"
-      />
-      <button
-        type="button"
-        className="primary-action"
-        onClick={() => {
-          void submitQuestion();
-        }}
-        disabled={state.status === "loading"}
-      >
-        {state.status === "loading" ? "Thinking..." : "Ask coach"}
-      </button>
-
-      {state.answer ? (
-        <div className="coach-response">
-          <p>{state.answer}</p>
-          {state.recommendedSectionId ? (
-            <button
-              type="button"
-              className="secondary-action inline-action"
-              onClick={() => onJump(state.recommendedSectionId!)}
-            >
-              Jump to recommended section
-            </button>
-          ) : null}
-          {state.quiz ? (
-            <div className="quiz-card">
-              <p className="notes-label">Quick check</p>
-              <p>{state.quiz.question}</p>
-              <ul>
-                {state.quiz.options.map((option) => (
-                  <li key={option}>{option}</li>
-                ))}
-              </ul>
-              <p className="muted">Suggested answer: {state.quiz.answer}</p>
-            </div>
-          ) : null}
-          {state.relatedDownloads.length ? (
-            <div className="support-links">
-              {state.relatedDownloads.map((downloadId) => {
-                const download = getDownloadById(downloadId);
-                if (!download) {
-                  return null;
-                }
-                return (
-                  <a key={download.id} href={download.file} download>
-                    {download.title}
-                  </a>
-                );
-              })}
-            </div>
-          ) : null}
+    <>
+      {!isOpen && (
+        <button className="quick-coach-trigger" onClick={() => setIsOpen(true)}>
+          AI Quiz Coach
+        </button>
+      )}
+      <aside className={`coach-floating ${isOpen ? "" : "hidden"}`}>
+        <div className="coach-head">
+          <div>
+            <span className="eyebrow" style={{ color: "var(--accent)" }}>AI Quiz Coach</span>
+            <h3>Ask about a module or test understanding</h3>
+          </div>
+          <button className="coach-toggle" onClick={() => setIsOpen(false)}>✕</button>
         </div>
-      ) : null}
-    </aside>
+        <div className="coach-body">
+          <label className="coach-label" htmlFor="coach-question">
+            Ask a course question
+          </label>
+          <textarea
+            id="coach-question"
+            value={state.question}
+            onChange={(event) =>
+              setState((current) => ({ ...current, question: event.target.value }))
+            }
+            placeholder="Example: Where should I start if I want to understand Codex approvals?"
+          />
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={() => { void submitQuestion(); }}
+            disabled={state.status === "loading"}
+          >
+            {state.status === "loading" ? "Thinking..." : "Ask coach"}
+          </button>
+
+          {state.answer && (
+            <div className="coach-response">
+              <p>{state.answer}</p>
+              {state.recommendedSectionId && (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  style={{ fontSize: "0.85rem", padding: "0.4rem 0.8rem", marginTop: "0.5rem" }}
+                  onClick={() => onJump(state.recommendedSectionId!)}
+                >
+                  Jump to recommended section
+                </button>
+              )}
+              {state.quiz && (
+                <div className="quiz-card">
+                  <span className="eyebrow">Quick check</span>
+                  <p>{state.quiz.question}</p>
+                  <ul>
+                    {state.quiz.options.map((option) => (
+                      <li key={option}>{option}</li>
+                    ))}
+                  </ul>
+                  <p className="muted" style={{ margin: 0, fontSize: "0.9rem" }}>
+                    Suggested answer: {state.quiz.answer}
+                  </p>
+                </div>
+              )}
+              {state.relatedDownloads.length > 0 && (
+                <div style={{ marginTop: "1rem" }}>
+                  <span className="eyebrow">Related assets</span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                    {state.relatedDownloads.map((id) => {
+                      const d = getDownloadById(id);
+                      if (!d) return null;
+                      return <a key={d.id} href={d.file} download style={{ color: "var(--accent)", fontWeight: 600, fontSize: "0.9rem" }}>{d.title}</a>;
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </aside>
+    </>
   );
 }
 
-export function PresentationShell() {
+export function PresentationShell({
+  initialModules,
+  initialStorySections,
+}: {
+  initialModules: Module[];
+  initialStorySections: StorySection[];
+}) {
   const [activeSection, setActiveSection] = useState("home");
-  const [presenterMode, setPresenterMode] = useState(false);
-  const [notesOpen, setNotesOpen] = useState(true);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [presenterMode, setPresenterMode] = useState(true);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
@@ -383,156 +161,273 @@ export function PresentationShell() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
         if (visible?.target instanceof HTMLElement) {
-          setActiveSection(visible.target.dataset.sectionId ?? "home");
+          setActiveSection(visible.target.id);
         }
       },
-      { threshold: [0.35, 0.6, 0.9] },
+      { threshold: [0.1, 0.4, 0.7], rootMargin: "-15% 0px -40% 0px" },
     );
 
     Object.values(sectionRefs.current).forEach((section) => {
-      if (section) {
-        observer.observe(section);
-      }
+      if (section) observer.observe(section);
     });
-
     return () => observer.disconnect();
-  }, []);
-
-  const activeIndex = useMemo(
-    () => storySections.findIndex((section) => section.id === activeSection),
-    [activeSection],
-  );
+  }, [initialStorySections]);
 
   function jumpToSection(sectionId: string) {
-    sectionRefs.current[sectionId]?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    sectionRefs.current[sectionId]?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") {
-        return;
-      }
-
-      const nextIndex =
-        event.key === "ArrowDown"
-          ? Math.min(activeIndex + 1, storySections.length - 1)
-          : Math.max(activeIndex - 1, 0);
-
-      jumpToSection(storySections[nextIndex].id);
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeIndex]);
 
   return (
     <div className="site-shell">
       <header className="topbar">
-        <div className="topbar-brand">
-          <Image
-            src="/brand/ananseum-wordmark-light.svg"
-            alt="Ananseum"
-            className="topbar-wordmark"
-            width={300}
-            height={78}
-          />
-          <span>{brandConfig.tag}</span>
-        </div>
+        <Image src="/brand/official-logo.jpg" alt="Ananseum" className="brand-mark" width={440} height={120} style={{ objectFit: 'contain', transform: 'scale(1.6)' }} />
         <nav className="topbar-actions">
-          <button type="button" onClick={() => setPresenterMode((value) => !value)}>
-            {presenterMode ? "Learner view" : "Presenter view"}
-          </button>
-          {presenterMode ? (
-            <button type="button" onClick={() => setNotesOpen((value) => !value)}>
-              {notesOpen ? "Hide notes" : "Show notes"}
-            </button>
-          ) : null}
-          <Link href={presenterMode ? "/downloads?audience=course-owner" : "/downloads"}>
-            Downloads
-          </Link>
+          <div className="mode-tabs">
+            <button className={!presenterMode ? "active" : ""} onClick={() => setPresenterMode(false)}>Learner Mode</button>
+            <button className={presenterMode ? "active" : ""} onClick={() => setPresenterMode(true)}>Tutor Mode</button>
+          </div>
+          <Link href="/downloads" className="btn-outline">Downloads Hub</Link>
         </nav>
       </header>
 
-      <div className="presenter-rail">
-        <div className="progress-chip">
-          <span>
-            {activeIndex + 1} / {storySections.length}
-          </span>
-          <strong>{storySections[activeIndex]?.title}</strong>
-        </div>
-        <div className="rail-nav">
-          {storySections.map((section) => (
-            <button
-              key={section.id}
-              type="button"
-              onClick={() => jumpToSection(section.id)}
-              className={section.id === activeSection ? "active" : ""}
-              aria-label={section.title}
-            />
-          ))}
-        </div>
-        <div className="rail-actions">
-          <button
-            type="button"
-            onClick={() => jumpToSection(storySections[Math.max(activeIndex - 1, 0)].id)}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              jumpToSection(
-                storySections[Math.min(activeIndex + 1, storySections.length - 1)].id,
-              )
-            }
-          >
-            Next
-          </button>
-        </div>
+      <div className="course-layout">
+        <aside className="toc-sidebar">
+          <span className="eyebrow">Contents</span>
+          <nav className="toc-nav">
+            {initialStorySections.map((section) => {
+              if (section.kind === 'day-intro') {
+                return (
+                  <span key={section.id} className="toc-day-label">{section.eyebrow}</span>
+                );
+              }
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => jumpToSection(section.id)}
+                  className={`toc-link ${activeSection === section.id ? "active" : ""}`}
+                >
+                  {section.title}
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        <main className="course-main">
+          {initialStorySections.map((section) => {
+            const currentModule = section.moduleSlug
+              ? initialModules.find((m) => m.slug === section.moduleSlug)
+              : undefined;
+
+            return (
+              <section
+                key={section.id}
+                id={section.id}
+                className="section-anchor"
+                ref={(el) => { sectionRefs.current[section.id] = el; }}
+              >
+                {section.kind === "hero" && (
+                  <div className="hero-wrapper">
+                    <div className="hero-copy">
+                      <span className="eyebrow">{section.eyebrow}</span>
+                      <h1>{section.title}</h1>
+                      <p className="subtitle">{section.summary}</p>
+                      <ul className="signal-list">
+                        <li><strong>Who this course is for</strong>Leaders, product teams, technical managers, and practitioners exploring real-world AI adoption.</li>
+                        <li><strong>What participants will learn</strong>How modern AI works, how to structure better AI tasks, how to use Codex effectively, how OpenClaw supports orchestration, and how to design a practical AI pilot.</li>
+                      </ul>
+                    </div>
+                    <div className="facts-card">
+                       <Image src="/brand/official-logo.jpg" alt="Ananseum Logo" width={400} height={110} className="brand-mark-wrap" style={{ objectFit: 'contain', transform: 'scale(1.5)', transformOrigin: 'left center' }} />
+                       {presenterMode ? (
+                         <>
+                           <p><strong>Facilitator Guide</strong> for the Modern AI in Practice course.</p>
+                           <p>Use this guide for timings, teaching notes, demo flow, debrief prompts, exercise facilitation, and capstone coaching.</p>
+                         </>
+                       ) : (
+                         <>
+                           <p><strong>Participant Workbook</strong> for the Modern AI in Practice course.</p>
+                           <p>Use this pack to follow the sessions, capture notes, complete exercises, and leave with one practical AI pilot blueprint.</p>
+                         </>
+                       )}
+                       <p><strong>Presented by:</strong><br/>Alfred Opare Saforo<br/>CEO Ananseum</p>
+                       <p><strong>Date / Cohort:</strong><br/>28/03/2026 | Live Cohort</p>
+                       <button className="btn-primary" onClick={() => jumpToSection(initialStorySections[1]?.id ?? "day-1")}>Start Exploring</button>
+                    </div>
+                  </div>
+                )}
+
+                {section.kind === "module" && currentModule && (
+                  <div className="module-section">
+                    <div className="module-header">
+                      <span className="module-meta">Day {currentModule.day} / {currentModule.duration}</span>
+                      <h2>{currentModule.title}</h2>
+                      <p className="summary">{currentModule.objective}</p>
+                    </div>
+                    
+                    {presenterMode ? (
+                      <>
+                        <div className="module-grid-new">
+                          <div className="module-card-clean" style={{ gridColumn: 'span 1' }}>
+                            <h3>Core Idea</h3>
+                            <ul>{currentModule.coreIdea.map((c, i) => <li key={i}>{c}</li>)}</ul>
+                          </div>
+                          <div className="module-card-clean">
+                            <h3>What this section establishes</h3>
+                            <p>{currentModule.deliveryLead}</p>
+                          </div>
+                        </div>
+
+                        <details className="module-accordion" open={false}>
+                          <summary>Key points to impart</summary>
+                          <div className="accordion-content">
+                            <ul>{currentModule.talkingPoints.map((t, i) => <li key={i}>{t}</li>)}</ul>
+                          </div>
+                        </details>
+                        <details className="module-accordion">
+                          <summary>Why it matters strategically</summary>
+                          <div className="accordion-content">
+                            <p>{currentModule.takeaway}</p>
+                          </div>
+                        </details>
+                      </>
+                    ) : learnerContentMap[currentModule.slug] ? (
+                      <LearnerTabUI data={learnerContentMap[currentModule.slug]} />
+                    ) : (
+                      <p className="muted">Learner content pending...</p>
+                    )}
+                  </div>
+                )}
+
+                {section.kind === "day-intro" && (
+                  <div className="interstitial-panel">
+                    <span className="eyebrow">{section.eyebrow}</span>
+                    <h2>{section.title}</h2>
+                    <p className="subtitle">{section.summary}</p>
+                  </div>
+                )}
+
+                {section.kind === "demos" && (
+                  <div className="interstitial-panel" style={{ textAlign: !presenterMode ? "left" : "center" }}>
+                    {presenterMode ? (
+                      <>
+                        <span className="eyebrow">{section.eyebrow}</span>
+                        <h2>{section.title}</h2>
+                        <p className="subtitle">{section.summary}</p>
+                        <div className="module-grid-clean" style={{ justifyContent: "center" }}>
+                          <div className="interstitial-card">
+                            <h3>What participants will see</h3>
+                            <ul>
+                              <li>Prompt/context quality comparison</li>
+                              <li>End-to-end Codex software task</li>
+                              <li>OpenClaw orchestration walkthrough</li>
+                            </ul>
+                          </div>
+                          <div className="interstitial-card">
+                            <h3>Why the demos matter</h3>
+                            <p>Each demo makes the system visible: what context it needs, what controls matter, and how a human should judge the result.</p>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ textAlign: "left" }}>
+                        <h2 style={{ marginBottom: "1.5rem" }}>{section.title}</h2>
+                        <LearnerTabUI data={learnerInterstitials["demos"]} />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {section.kind === "capstone" && (
+                  <div className="module-section">
+                    <div className="module-header">
+                      <span className="eyebrow">{section.eyebrow}</span>
+                      <h2>{section.title}</h2>
+                      <p className="summary">{section.summary}</p>
+                    </div>
+                    {presenterMode ? (
+                      <div className="module-grid-new">
+                         <div className="module-card-clean">
+                            <h3>What the capstone produces</h3>
+                            <ul>
+                              <li>A named workflow with a real user group</li>
+                              <li>A control model for approvals, risk, and containment</li>
+                              <li>Success metrics and a go / no-go threshold</li>
+                              <li>A 30-60-90 day next step</li>
+                            </ul>
+                         </div>
+                         <div className="module-card-clean">
+                            <h3>Template</h3>
+                            <p>Download the official pilot blueprint to map out your use case.</p>
+                            <a href="/downloads/learner/pilot-blueprint-template.md" download className="btn-primary" style={{marginTop:"1rem", width:"auto", display:"inline-block", textAlign:"center"}}>Download Blueprint</a>
+                         </div>
+                      </div>
+                    ) : (
+                      <>
+                        <LearnerTabUI data={learnerInterstitials["capstone"]} />
+                        <div style={{ marginTop: "2rem" }}>
+                          <a href="/downloads/learner/pilot-blueprint-template.md" download className="btn-primary" style={{ width: "auto", display: "inline-flex" }}>Download Pilot Blueprint Template</a>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {section.kind === "downloads" && (
+                  <div className="module-section">
+                    <div className="module-header">
+                      <span className="eyebrow">{section.eyebrow}</span>
+                      <h2>{section.title}</h2>
+                      <p className="summary">{section.summary}</p>
+                    </div>
+                    <div className="downloads-grid">
+                      {getDownloadsForAudience(presenterMode ? "course-owner" : "learner").map(d => (
+                         <div key={d.id} className="resource-card">
+                           <span className="resource-badge">{d.category}</span>
+                           <strong>{d.title}</strong>
+                           <p>{d.description || "Core asset for the Modern AI in Practice curriculum."}</p>
+                           <a href={d.file} download className="download-action">Download file</a>
+                         </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {section.kind === "final" && (
+                  <div className="interstitial-panel" style={{ textAlign: !presenterMode ? "left" : "center" }}>
+                    {presenterMode ? (
+                      <>
+                        <span className="eyebrow">{section.eyebrow}</span>
+                        <h2>{section.title}</h2>
+                        <p className="subtitle">{section.summary}</p>
+                        <div className="module-grid-clean" style={{ justifyContent: "center" }}>
+                          <div className="interstitial-card">
+                            <h3>What participants leave with</h3>
+                            <ul>
+                              <li>A mental model for modern AI systems</li>
+                              <li>Operational understanding of Codex and OpenClaw</li>
+                              <li>One realistic adoption blueprint</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ textAlign: "left" }}>
+                        <h2 style={{ marginBottom: "1.5rem" }}>From Curiosity to Pilot</h2>
+                        <LearnerTabUI data={learnerInterstitials["final"]} />
+                      </div>
+                    )}
+                    <div style={{ textAlign: "center" }}>
+                      <button className="btn-secondary" style={{marginTop:"3rem"}} onClick={() => window.scrollTo({top:0, behavior:"smooth"})}>Back to Top</button>
+                    </div>
+                  </div>
+                )}
+
+              </section>
+            );
+          })}
+        </main>
       </div>
-
-      <main
-        className={`presentation-stream ${presenterMode ? "presenter-mode" : "learner-mode"}`}
-        onTouchStart={(event) => setTouchStart(event.changedTouches[0]?.clientY ?? null)}
-        onTouchEnd={(event) => {
-          const end = event.changedTouches[0]?.clientY ?? null;
-          if (touchStart === null || end === null) {
-            return;
-          }
-
-          const delta = touchStart - end;
-          if (Math.abs(delta) < 50) {
-            return;
-          }
-
-          const nextIndex =
-            delta > 0
-              ? Math.min(activeIndex + 1, storySections.length - 1)
-              : Math.max(activeIndex - 1, 0);
-
-          jumpToSection(storySections[nextIndex].id);
-          setTouchStart(null);
-        }}
-      >
-        {storySections.map((section) => (
-          <div
-            key={section.id}
-            ref={(element) => {
-              sectionRefs.current[section.id] = element;
-            }}
-          >
-            <SectionPanel
-              section={section}
-              presenterMode={presenterMode}
-              notesOpen={notesOpen}
-              isActive={section.id === activeSection}
-            />
-          </div>
-        ))}
-      </main>
 
       <CoachPanel onJump={jumpToSection} />
     </div>

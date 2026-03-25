@@ -6,13 +6,14 @@ export type Module = {
   duration: string;
   audience: string;
   objective: string;
+  coreIdea: string[];
   deliveryLead?: string;
   talkingPoints: string[];
   demo?: {
     title: string;
     flow: string[];
   };
-  exercise: {
+  exercise?: {
     title: string;
     prompt: string;
     output: string;

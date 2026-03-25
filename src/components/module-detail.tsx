@@ -23,6 +23,14 @@ export function ModuleDetail({ module }: { module: Module }) {
           <p>{module.deliveryLead ?? module.objective}</p>
         </div>
         <div className="detail-block">
+          <h2>Core idea</h2>
+          <ul>
+            {module.coreIdea.map((idea, idx) => (
+              <li key={idx}>{idea}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="detail-block">
           <h2>Key points to leave with</h2>
           <ul>
             {module.talkingPoints.map((point) => (
@@ -30,12 +38,14 @@ export function ModuleDetail({ module }: { module: Module }) {
             ))}
           </ul>
         </div>
-        <div className="detail-block">
-          <h2>Workshop prompt</h2>
-          <p>{module.exercise.title}</p>
-          <p>{module.exercise.prompt}</p>
-          <p className="muted">Expected output: {module.exercise.output}</p>
-        </div>
+        {module.exercise ? (
+          <div className="detail-block">
+            <h2>Workshop prompt</h2>
+            <p>{module.exercise.title}</p>
+            <p>{module.exercise.prompt}</p>
+            <p className="muted">Expected output: {module.exercise.output}</p>
+          </div>
+        ) : null}
         <div className="detail-block">
           <h2>Why it matters</h2>
           <p>{module.takeaway}</p>

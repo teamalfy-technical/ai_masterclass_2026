@@ -1,97 +1,44 @@
-import { downloads, getDownloadById, modules, storySections } from "@/lib/course-data";
-import { CoachReply, Module } from "@/types/course";
+import { downloads } from "@/lib/course-data";
+import { getModules } from "@/lib/course-parser";
+import { CoachReply } from "@/types/course";
+import { generateObject } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { z } from "zod";
 
-function scoreText(query: string, values: string[]) {
-  const normalized = query.toLowerCase();
-  return values.reduce((score, value) => {
-    const parts = value.toLowerCase().split(/[\s,./-]+/).filter(Boolean);
-    return score + parts.filter((part) => normalized.includes(part)).length;
-  }, 0);
-}
+export async function answerCoach(question: string): Promise<CoachReply> {
+  const modules = getModules();
 
-function pickModule(question: string): Module | undefined {
-  return modules
-    .map((entry) => ({
-      module: entry,
-      score: scoreText(question, [
-        entry.title,
-        entry.objective,
-        entry.takeaway,
-        ...entry.keywords,
-        ...entry.talkingPoints,
-      ]),
-    }))
-    .sort((a, b) => b.score - a.score)[0]?.module;
-}
+  const contextStr = modules.map(m => `Module: ${m.title} (Slug: ${m.slug})\nObjective: ${m.objective}\nTakeaway: ${m.takeaway}\n`).join("\n");
+  const downloadNames = downloads.map(d => `${d.title} (ID: ${d.id})`).join(", ");
 
-function buildQuiz(module: Module) {
-  const bank = [
-    {
-      question: `What is the main objective of "${module.title}"?`,
-      options: [
-        module.objective,
-        "To teach advanced model training techniques.",
-        "To replace human oversight with automated decision making.",
-      ],
-      answer: module.objective,
-    },
-    {
-      question: `Which takeaway best matches "${module.title}"?`,
-      options: [
-        module.takeaway,
-        "AI systems should always operate without retrieval or tools.",
-        "Broad, undefined pilots are the best way to start.",
-      ],
-      answer: module.takeaway,
-    },
-  ];
+  const { object } = await generateObject({
+    model: openai("gpt-4o-mini"),
+    system: `You are the AI Quiz Coach for the Ananseum "Modern AI in Practice" course.
+Answer the user's question directly, clearly, and concisely. Keep your tone calm, practical, and operational.
+Use the course context below to ground your answer:
+${contextStr}
 
-  return bank[module.order % bank.length];
-}
+Available downloads: ${downloadNames}
 
-function buildGuidance(question: string) {
-  const lower = question.toLowerCase();
+You must return a JSON object with:
+- answer: Your verbal response to the question.
+- recommendedSectionId: (optional) The slug of the module most relevant to the user's question, or "downloads" if they ask about worksheets/templates, or "home" if they ask where to start.
+- recommendedModuleSlug: (optional) Same as recommendedSectionId if it matches a module exactly.
+- relatedDownloads: an array of string IDs from the available downloads that match. Use [] if none.
+- quiz: (optional) a multiple-choice question to test their understanding of the topic, containing 'question', 'options' (array of strings), and 'answer'.`,
+    prompt: question,
+    schema: z.object({
+      answer: z.string(),
+      recommendedSectionId: z.string().optional(),
+      recommendedModuleSlug: z.string().optional(),
+      relatedDownloads: z.array(z.string()),
+      quiz: z.object({
+        question: z.string(),
+        options: z.array(z.string()),
+        answer: z.string(),
+      }).optional(),
+    }),
+  });
 
-  if (lower.includes("download") || lower.includes("worksheet") || lower.includes("template")) {
-    return {
-      answer:
-        "Use the Downloads Hub for the course guide, module summaries, facilitator notes, worksheets, blueprint template, and resource sheet.",
-      recommendedSectionId: "downloads",
-      relatedDownloads: downloads.map((download) => download.id),
-    };
-  }
-
-  if (lower.includes("next") || lower.includes("where should i start")) {
-    return {
-      answer:
-        "Start with the hero and Day 1 flow if you are new to the course, then use the capstone once you have a candidate pilot in mind.",
-      recommendedSectionId: "home",
-      relatedDownloads: ["course-guide", "pilot-blueprint"],
-    };
-  }
-
-  return undefined;
-}
-
-export function answerCoach(question: string): CoachReply {
-  const guidance = buildGuidance(question);
-  if (guidance) {
-    return { ...guidance };
-  }
-
-  const courseModule = pickModule(question) ?? modules[0];
-  const linkedDownload = courseModule.downloads
-    .map((downloadId) => getDownloadById(downloadId))
-    .find((download) => download?.audience === "learner");
-  const recommendedSection =
-    storySections.find((section) => section.moduleSlug === courseModule.slug)?.id ??
-    courseModule.slug;
-
-  return {
-    answer: `${courseModule.title} is the best match for this question. ${courseModule.objective} Focus the discussion on ${courseModule.takeaway.toLowerCase()}`,
-    recommendedSectionId: recommendedSection,
-    recommendedModuleSlug: courseModule.slug,
-    relatedDownloads: linkedDownload ? [linkedDownload.id] : [],
-    quiz: buildQuiz(courseModule),
-  };
+  return object as CoachReply;
 }

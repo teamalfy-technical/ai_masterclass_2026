@@ -12,5 +12,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return NextResponse.json(answerCoach(question));
+  try {
+    const response = await answerCoach(question);
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error("AI Coach Error:", error);
+    return NextResponse.json(
+      { error: "Failed to reach the AI Coach. Ensure OPENAI_API_KEY is configured." },
+      { status: 500 }
+    );
+  }
 }
