@@ -1,0 +1,8 @@
+<svg width="640" height="180" viewBox="0 0 640 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="180" fill="white"/>
+  <rect x="49" y="55" width="115" height="115" rx="16" fill="#050505"/>
+  <path d="M78 139L105.5 77H116.5L144 139H122.5L110.8 110.7H110L99.4 139H78Z" fill="white"/>
+  <text x="194" y="125" fill="#050505" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="700" letter-spacing="-3">Ananseum</text>
+  <circle cx="575" cy="123" r="8" fill="#FA51A4"/>
+  <text x="82" y="204" fill="#050505" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="400" opacity="0.96">Creative Web. Smart Tech.</text>
+</svg>

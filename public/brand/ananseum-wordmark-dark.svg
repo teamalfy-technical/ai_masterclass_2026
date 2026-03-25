@@ -1,0 +1,14 @@
+<svg width="640" height="180" viewBox="0 0 640 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="180" fill="#050505"/>
+  <rect x="49" y="55" width="115" height="115" rx="16" fill="white"/>
+  <path d="M78 139L105.5 77H116.5L144 139H122.5L110.8 110.7H110L99.4 139H78Z" fill="#050505"/>
+  <path d="M195 144V76H221.5L272.7 127.1H273.7V76H297.9V144H271.4L220.2 92.9H219.2V144H195Z" fill="white"/>
+  <path d="M312 144V76H398.1V96.3H336.2V118.2H392.7V137.8H336.2V144H312Z" fill="white" opacity="0"/>
+  <path d="M311.8 144V76H368.9C382.4 76 393.2 78.3 401.3 82.9C409.4 87.5 415.2 93.6 418.8 101.2C422.4 108.7 424.2 117 424.2 126C424.2 135 422.4 143.3 418.8 150.9C415.2 158.4 409.4 164.5 401.3 169.1C393.2 173.7 382.4 176 368.9 176H311.8V144ZM336 156.2H367.6C377.3 156.2 384.8 153.7 390.1 148.7C395.3 143.7 397.9 136.1 397.9 126C397.9 115.9 395.3 108.3 390.1 103.3C384.8 98.3 377.3 95.8 367.6 95.8H336V156.2Z" fill="white" opacity="0"/>
+  <path d="M191.5 144.5L224.9 76H249L282.5 144.5H257.2L250.1 128.3H223.1L216 144.5H191.5ZM230.6 111.5H242.6L236.9 98.3H236.2L230.6 111.5Z" fill="white" opacity="0"/>
+  <path d="M197 145V74.5H223L249.9 124.8H250.9L277.8 74.5H303.8V145H280.7V112.2H279.8L260.8 145H239.9L220.9 112.2H220V145H197Z" fill="white" opacity="0"/>
+  <path d="M197.3 142.8L226.7 79.2H246.1L275.4 142.8H253.8L247.5 127.6H225.1L218.9 142.8H197.3Z" fill="white" opacity="0"/>
+  <text x="194" y="125" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="700" letter-spacing="-3">Ananseum</text>
+  <circle cx="575" cy="123" r="8" fill="#FA51A4"/>
+  <text x="82" y="204" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="400" opacity="0.96">Creative Web. Smart Tech.</text>
+</svg>
