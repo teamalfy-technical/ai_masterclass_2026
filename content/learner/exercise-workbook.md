@@ -1,145 +1,120 @@
 # Exercise Workbook
 
-## How to use this workbook
-- Complete each activity during the relevant module.
-- Keep answers short and operational.
-- Every exercise should help the final pilot blueprint.
+## How To Use This Workbook
+- Complete each activity during the chapter where it appears.
+- Keep answers short, operational, and reviewable.
+- Use the workbook to feed your final pilot blueprint rather than treating each exercise as standalone.
 
-## Completion standard
+## Completion Standard
 A participant has completed the workbook when they have:
-- classified at least one AI use case correctly
-- diagnosed at least one failure mode
-- rewritten at least one weak task brief
-- mapped at least one approval/control path
-- completed one system map
-- produced one capstone pilot blueprint
+- diagnosed one AI task as model work, retrieval work, workflow work, or human-review work;
+- rewritten at least one weak request into a bounded task brief;
+- reviewed one Codex workflow using validation and governance criteria;
+- mapped one grounded AI system with tools, memory, and evaluation;
+- defined one OpenClaw fit or no-fit workflow decision;
+- completed one pilot blueprint with owner, controls, and success metrics.
 
-## Activity 1: Use-Case Sorting
-- Module: The AI Map
+## Activity 1: AI Sense Check
+- Module: AI Fundamentals and the LLM Shift
 - Time: 12 minutes
-- Format: small groups
-- Prompt:
-  - Sort six example scenarios into chatbot, retrieval workflow, automation, or agentic workflow.
-- Expected output:
-  - One sorted list with a short reason for each choice.
-- Success criteria:
-  - The team can explain why a scenario needs or does not need orchestration, retrieval, or tool use.
-- Debrief questions:
-  - Which use cases were easy to classify?
-  - Which ones looked similar at first but were operationally different?
-
-## Activity 2: Failure Diagnosis
-- Module: How Modern AI Works
-- Time: 10 minutes
 - Format: pairs
-- Prompt:
-  - Review one flawed AI output and identify whether the failure came from poor context, weak prompting, missing retrieval, unsafe autonomy, or weak human review.
-- Expected output:
-  - One diagnosis and one corrective action.
-- Success criteria:
-  - The pair can point to the system component that most likely caused the failure.
-- Debrief questions:
-  - Was this primarily a model issue or a workflow design issue?
-  - What would you change first?
+### Prompt
+- Pick one workflow your team believes AI could improve.
+- Separate the work into model output, real-world data retrieval, controlled action, and human approval.
+### Expected output
+- One short workflow diagnosis and one unresolved question.
+### Success criteria
+- The pair can explain what the model can do alone and what the workflow still needs around it.
+### Debrief questions
+- What part of this workflow looks impressive but is still unsupported?
+- What would need evidence before you automate it?
+
+## Activity 2: Systems Model Mapping
+- Module: AI Landscape and Systems Model
+- Time: 12 minutes
+- Format: table group
+### Prompt
+- Map one business task into these parts: task, instructions, context, tools, review, and evaluation.
+- Decide whether the task needs a simple assistant, retrieval, workflow automation, or orchestration.
+### Expected output
+- One systems sketch and one recommendation on the smallest useful AI pattern.
+### Success criteria
+- The group can justify why the task does or does not need tool use, retrieval, or orchestration.
+### Debrief questions
+- Which part of the workflow creates the most risk?
+- What would be the first thing you would test before scaling?
 
 ## Activity 3: Prompt Repair
-- Module: Prompting and Context Engineering
+- Module: Context Engineering and Prompting
 - Time: 15 minutes
 - Format: individual then pair review
-- Prompt:
-  - Rewrite a vague request into a task brief with context, constraints, acceptance criteria, and required verification.
-- Expected output:
-  - Three improved task briefs.
-- Success criteria:
-  - Each prompt includes audience, scope, output type, and a definition of done.
-- Debrief questions:
-  - What changed most from the original version?
-  - Which details were essential rather than nice-to-have?
+### Prompt
+- Rewrite one vague request into a complete task brief.
+- Include goal, audience, context, inputs, constraints, process, and acceptance criteria.
+### Expected output
+- Two improved task briefs that are bounded enough to review before execution.
+### Success criteria
+- Each brief defines the user, the scope, the output format, and how success will be judged.
+### Debrief questions
+- What missing detail changed the quality of the request most?
+- Which constraint reduced risk the most?
 
-## Activity 4: Control-Point Review
-- Module: Codex Deep Dive
-- Time: 12 minutes
-- Format: table discussion
-- Prompt:
-  - Identify where approvals, sandboxing, and review gates should sit in an AI-assisted coding workflow.
-- Expected output:
-  - A high-trust, medium-trust, low-trust map.
-- Success criteria:
-  - The group can distinguish safe read-only use from riskier execution and networked actions.
-- Debrief questions:
-  - What should always need human approval?
-  - What could be safely delegated under policy?
-
-## Activity 5: Demo Review Rubric
-- Module: Codex End-to-End Demo or Codex Practical Lab
+## Activity 4: Codex Review Loop
+- Module: Codex Workflows, Validation, and Governance
 - Time: 15 minutes
 - Format: small groups
-- Prompt:
-  - Score the Codex run on task clarity, validation, diff reviewability, risk posture, and rollout readiness.
-- Scoring scale:
-  - 1 = weak
-  - 2 = mixed
-  - 3 = strong
-- Expected output:
-  - A go, no-go, or pilot recommendation.
-- Success criteria:
-  - The group can justify the recommendation using observable workflow evidence.
-- Debrief questions:
-  - What made the run trustworthy or untrustworthy?
-  - What would you require before wider use?
+### Prompt
+- Review a Codex run using these dimensions: task clarity, plan quality, validation evidence, diff reviewability, and approval posture.
+- Score each dimension from 1 to 3.
+### Expected output
+- One go, revise, or no-go recommendation with a short rationale.
+### Success criteria
+- The group can defend its recommendation using observable workflow evidence, not intuition alone.
+### Debrief questions
+- Which validation step mattered most?
+- What approval would you require before wider use?
 
-## Activity 6: System Mapping
-- Module: Building Real AI Systems
+## Activity 5: Grounded System Design
+- Module: AI Systems, RAG, Tools, Memory, and Evaluation
 - Time: 15 minutes
 - Format: group exercise
-- Prompt:
-  - Map one internal workflow using these fields: user, trigger, model, context source, tools, approvals, outputs, metrics.
-- Expected output:
-  - One system map for a candidate use case.
-- Success criteria:
-  - The group can describe where human oversight enters the system.
-- Debrief questions:
-  - What part of the system is least defined right now?
-  - Which dependency makes the workflow viable or risky?
+### Prompt
+- Design one grounded workflow using these fields: user, trigger, source material, retrieval, tools, memory, human review, and evaluation metric.
+- Call out one failure mode and one control.
+### Expected output
+- One system map with one measurable quality check.
+### Success criteria
+- The group can explain why the system would stay grounded instead of guessing.
+### Debrief questions
+- What should never be stored in memory?
+- Which metric would tell you the workflow is useful?
 
-## Activity 7: Ownership Map
-- Module: OpenClaw Architecture and Setup
-- Time: 10 minutes
-- Format: group discussion
-- Prompt:
-  - Identify which teams would own platform operations, workflow design, security review, and adoption.
-- Expected output:
-  - A draft ownership map or light RACI.
-- Success criteria:
-  - Platform, business, and control responsibilities are not collapsed into one owner.
-- Debrief questions:
-  - Who would approve rollout?
-  - Who would operate the system day to day?
-
-## Activity 8: Guardrail Design Review
-- Module: Skills, ClawHub, and Codex inside OpenClaw
-- Time: 10 minutes
+## Activity 6: OpenClaw Fit Assessment
+- Module: OpenClaw Orchestration, Skills, and Security
+- Time: 12 minutes
 - Format: table discussion
-- Prompt:
-  - List the minimum controls required before connecting a coding agent to a routed assistant platform.
-- Expected output:
-  - A shortlist of non-negotiable controls.
-- Success criteria:
-  - The shortlist covers permissions, approvals, data handling, and monitoring.
-- Debrief questions:
-  - Which control reduces risk the most?
-  - Which control is easiest to forget?
+### Prompt
+- Assess one workflow against these needs: persistence, multi-channel access, routing, tool integration, operator control, and security boundaries.
+- Decide whether OpenClaw is a strong fit, a possible fit, or unnecessary.
+### Expected output
+- One fit assessment and one list of controls required before rollout.
+### Success criteria
+- The table can explain why orchestration adds value or unnecessary complexity in this case.
+### Debrief questions
+- Which control would be non-negotiable?
+- What channel or session behavior changes the risk most?
 
-## Activity 9: Pilot Blueprint
-- Module: Capstone Workflow Workshop
+## Activity 7: Pilot Blueprint
+- Module: Capstone Pilot Blueprint
 - Time: 25 minutes
 - Format: team capstone
-- Prompt:
-  - Complete the pilot blueprint for one AI-assisted workflow your organization could test in 30 to 90 days.
-- Expected output:
-  - One completed pilot blueprint.
-- Success criteria:
-  - The blueprint names a sponsor, a workflow, controls, metrics, and a go/no-go threshold.
-- Debrief questions:
-  - Why this pilot and not another one?
-  - What would make you stop the pilot early?
+### Prompt
+- Complete the pilot blueprint for one AI-assisted workflow your organization could test in 30 to 90 days.
+- Keep the scope narrow enough to govern and meaningful enough to evaluate.
+### Expected output
+- One completed pilot blueprint with owner, controls, metrics, and decision rule.
+### Success criteria
+- The blueprint names the workflow, sponsor, approvals, risks, success metrics, and go or no-go threshold.
+### Debrief questions
+- Why this pilot and not a broader one?
+- What would make you pause or stop it early?

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:learner-pdfs": "python scripts/build-learner-pdfs.py",
     "start": "next start",
     "lint": "eslint"
   },

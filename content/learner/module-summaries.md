@@ -1,167 +1,111 @@
 # Module Summaries
 
-## 1. Welcome and Framing
-- Time: 15 minutes
-- Objective: align the room on what this course covers and what it does not cover
-- Key teaching points:
-  - this is a practical AI operating course, not a research survey
-  - the focus is workflow value, governance, and pilot design
-- Exercise: signal scan
-- Common misconception:
-  - AI strategy starts with model selection
-- Takeaway:
-  - frame AI as an operating decision, not a hype cycle
+Use this guide after the session as a compact review of the seven core course chapters. Each summary keeps the emphasis on operating judgment, not hype.
 
-## 2. The AI Map
-- Time: 45 minutes
-- Objective: create a shared map of AI, ML, GenAI, agents, multimodal systems, and automation
-- Key teaching points:
-  - not every AI use case needs an agent
-  - retrieval and orchestration solve different problems
-- Demo:
-  - chatbot versus workflow-enabled assistant
-- Exercise:
-  - use-case sorting
-- Common misconception:
-  - all AI tools are basically the same
-- Takeaway:
-  - match the use case to the right system type
+## 1. AI Fundamentals and the LLM Shift
+### Day and duration
+- Day 1.
+- 50 minutes.
+### Focus
+Understand what AI is, how LLMs work in practice, and why fluent output is not the same as grounded understanding.
+### Key ideas
+- AI is an umbrella term, not one product category.
+- LLMs predict likely next tokens in context.
+- Hallucinations are a structural limitation, not a personality flaw.
+- Useful AI depends on workflows, tools, validation, and human review.
+### Learner practice
+- Ask what is actually doing the work: model, retrieval, workflow, hidden labor, or human review.
+### Takeaway
+Before trusting an AI system, identify what is generating the output and what keeps it connected to reality.
 
-## 3. How Modern AI Works
-- Time: 45 minutes
-- Objective: explain models, tokens, context, retrieval, tools, memory, and evaluation in plain language
-- Key teaching points:
-  - context quality matters more than prompt cleverness
-  - failures usually point to a system design issue, not just a model issue
-- Exercise:
-  - failure diagnosis
-- Common misconception:
-  - hallucination is random and unavoidable
-- Takeaway:
-  - AI becomes manageable when you can name the system components and failure modes
+## 2. AI Landscape and Systems Model
+### Day and duration
+- Day 1.
+- 40 minutes.
+### Focus
+Place use cases on the right part of the map: model-only help, retrieval, workflow automation, or orchestration.
+### Key ideas
+- The reliable unit is a workflow, not just a model.
+- Strong first use cases are bounded, reviewable, and measurable.
+- Retrieval, tools, and orchestration solve different problems.
+### Learner practice
+- Map one recurring task into task, instructions, context, tools, review, and evaluation.
+### Takeaway
+Choose the smallest system that fits the problem instead of reaching for the most ambitious AI story.
 
-## 4. Prompting and Context Engineering
-- Time: 45 minutes
-- Objective: teach participants to write task briefs that are bounded and reviewable
-- Key teaching points:
-  - good prompts define scope, output, and verification
-  - repeatable guidance matters more than one-off cleverness
-- Demo:
-  - weak ask to operational brief
-- Exercise:
-  - prompt repair
-- Common misconception:
-  - prompting is mainly about magic phrases
-- Takeaway:
-  - strong context design improves reliability
+## 3. Context Engineering and Prompting
+### Day and duration
+- Day 1.
+- 90 minutes.
+### Focus
+Turn vague requests into complete briefs with purpose, source material, constraints, and acceptance criteria.
+### Key ideas
+- Better context beats clever wording.
+- Good prompting is good task design.
+- Missing context, weak constraints, and unclear review steps create avoidable failure.
+### Learner practice
+- Rewrite a weak ask into a usable brief that defines audience, scope, process, and done criteria.
+### Takeaway
+Prompt quality improves when the work request becomes specific enough to review before execution.
 
-## 5. Codex Deep Dive
-- Time: 45 minutes
-- Objective: explain how Codex works across app, CLI, IDE, and cloud-style workflows
-- Key teaching points:
-  - AGENTS.md stores durable repo guidance
-  - MCP expands tool and context access
-  - skills support reusable task patterns
-  - safe use depends on approvals, sandboxing, and validation
-- Exercise:
-  - control-point review
-- Common misconception:
-  - Codex is just a chat interface for code
-- Takeaway:
-  - Codex is most useful as a governed workflow, not a novelty assistant
+## 4. Codex Workflows, Validation, and Governance
+### Day and duration
+- Day 1.
+- 95 minutes.
+### Focus
+Understand how Codex works as a configured teammate inside a plan-first, review-heavy engineering loop.
+### Key ideas
+- Ask for a plan before asking for changes.
+- Validation matters more than speed.
+- AGENTS.md, MCP, and skills make repeatable workflows possible.
+- Approvals, sandboxing, and network limits are part of normal governance.
+### Learner practice
+- Review a Codex run using plan quality, validation evidence, diff clarity, and risk posture.
+### Takeaway
+The goal is not unchecked auto-coding. The goal is a faster, safer review loop.
 
-## 6. Codex End-to-End Demo
-- Time: 30 minutes
-- Objective: show the complete flow from repo understanding to validation and summary
-- Key teaching points:
-  - define the task clearly
-  - ask for a plan
-  - run checks
-  - review the diff
-  - summarize risks and next steps
-- Exercise:
-  - demo review rubric
-- Common misconception:
-  - trust comes from output speed rather than validation
-- Takeaway:
-  - trustworthy AI work is observable and reviewable
+## 5. AI Systems, RAG, Tools, Memory, and Evaluation
+### Day and duration
+- Day 2.
+- 90 minutes.
+### Focus
+Move from single prompts to systems that retrieve information, use tools, remember useful context, and measure quality.
+### Key ideas
+- Retrieval, tools, memory, and evaluation each solve different problems.
+- Grounding is what makes answers trustworthy.
+- Longer workflows increase the need for design, control points, and measurement.
+### Learner practice
+- Design one grounded workflow and define what should be retrieved, what should persist, and how quality will be checked.
+### Takeaway
+Real AI value appears when the model is embedded inside a measurable, reviewable system.
 
-## 7. Recap and Reflection
-- Time: 15 minutes
-- Objective: reinforce learning from Day 1 and surface remaining barriers
-- Key teaching points:
-  - value and risk must be discussed together
-  - unresolved questions should shape the Day 2 discussion
-- Exercise:
-  - risk and opportunity pairing
-- Common misconception:
-  - uncertainty means the organization is not ready
-- Takeaway:
-  - disciplined questions are part of readiness
+## 6. OpenClaw Orchestration, Skills, and Security
+### Day and duration
+- Day 2.
+- 90 minutes.
+### Focus
+Understand OpenClaw as a self-hosted orchestration layer for persistent, multi-channel assistants with controlled tools and routing.
+### Key ideas
+- Gateway is the control plane and single source of truth.
+- Sessions, channels, and routing turn isolated chat into durable workflow support.
+- Skills and plugins package repeatable behavior.
+- Safe defaults and governance must exist before broader rollout.
+### Learner practice
+- Map where OpenClaw would or would not fit in one real workflow from your team.
+### Takeaway
+The difference between a chat assistant and a governed AI system is infrastructure, not intelligence.
 
-## 8. Building Real AI Systems
-- Time: 45 minutes
-- Objective: move from chatbot thinking to workflow and system design
-- Key teaching points:
-  - RAG is not the same thing as orchestration
-  - tools, memory, routing, and approvals create operational systems
-- Exercise:
-  - system mapping
-- Common misconception:
-  - adding retrieval makes a system production-ready
-- Takeaway:
-  - real value comes from system design, not model access alone
-
-## 9. Codex Practical Lab
-- Time: 45 minutes
-- Objective: inspect a Codex-assisted task with an executive review lens
-- Key teaching points:
-  - bounded tasks are the right starting point
-  - leaders can judge clarity, controls, and reviewability without coding
-- Exercise:
-  - executive review rubric
-- Common misconception:
-  - non-coders cannot evaluate AI-assisted software work
-- Takeaway:
-  - operational review is a leadership skill
-
-## 10. OpenClaw Architecture and Setup
-- Time: 45 minutes
-- Objective: explain OpenClaw as a self-hosted orchestration layer
-- Key teaching points:
-  - the Gateway is the source of truth for sessions, routing, and channel connections
-  - multi-channel assistants require clear control boundaries
-  - self-hosting changes the trust and governance conversation
-- Exercise:
-  - ownership map
-- Common misconception:
-  - orchestration is just a nicer chat interface
-- Takeaway:
-  - OpenClaw turns isolated AI interactions into managed workflows
-
-## 11. Skills, ClawHub, and Codex inside OpenClaw
-- Time: 45 minutes
-- Objective: explain how reusable skills and ACP sessions extend OpenClaw
-- Key teaching points:
-  - native skills and ClawHub-installed skills package repeatable workflows
-  - ACP sessions can connect external runtimes such as Codex
-  - controls still matter when capability expands
-- Exercise:
-  - guardrail design review
-- Common misconception:
-  - more connected agents automatically mean more value
-- Takeaway:
-  - leverage only matters when governance keeps pace
-
-## 12. Capstone Workflow Workshop
-- Time: 30 minutes
-- Objective: convert course learning into one pilot blueprint
-- Key teaching points:
-  - the best pilot is specific, measurable, and governable
-  - define users, context, approvals, metrics, and containment before scale
-- Exercise:
-  - pilot blueprint
-- Common misconception:
-  - the best pilot is the largest or most ambitious use case
-- Takeaway:
-  - start with a pilot small enough to control and meaningful enough to matter
+## 7. Capstone Pilot Blueprint
+### Day and duration
+- Day 2.
+- 35 minutes.
+### Focus
+Turn course learning into one realistic pilot that is narrow enough to govern and meaningful enough to matter.
+### Key ideas
+- A strong pilot is narrow, owned, measurable, and reversible.
+- Start with one workflow, not a platform transformation.
+- Controls and success metrics should be visible before tooling expands.
+### Learner practice
+- Complete the pilot blueprint for one 30-to-90 day testable workflow.
+### Takeaway
+The best first pilot is the clearest workflow with an owner, a control model, and a decision rule.

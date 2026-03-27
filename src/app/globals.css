@@ -188,6 +188,35 @@ details.module-accordion .accordion-content { padding: 0 1.5rem 1.5rem; color: v
 .download-action { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem; color: var(--ink); background: var(--canvas); padding: 0.6rem 1.25rem; border-radius: var(--radius-sm); transition: background 0.2s; }
 .resource-card:hover .download-action { background: var(--ink); color: white; }
 
+.downloads-layout .course-main { gap: 4rem; }
+.download-groups-redesign { display: flex; flex-direction: column; gap: 3rem; }
+.download-section .module-header { margin-bottom: 1.25rem; }
+.download-switch {
+  display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;
+}
+.download-switch-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.75rem 1.25rem; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface);
+  font-weight: 600; font-size: 0.95rem; color: var(--muted);
+  transition: all 0.2s ease;
+}
+.download-switch-link:hover { border-color: var(--accent); color: var(--ink); }
+.download-switch-link.active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--ink);
+}
+.resource-meta-row {
+  display: flex; gap: 0.75rem; flex-wrap: wrap;
+  margin-bottom: 1rem; font-size: 0.82rem; color: var(--muted);
+}
+.resource-highlights {
+  margin: 0 0 1.5rem; padding-left: 1.15rem;
+  color: var(--ink-light); font-size: 0.94rem;
+}
+.resource-highlights li { margin-bottom: 0.25rem; }
+
 .coach-floating { position: fixed; bottom: 2rem; right: 2rem; z-index: 100; width: 400px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; opacity: 1; transition: opacity 0.3s, transform 0.3s; }
 .coach-floating.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
 .coach-head { background: var(--ink); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; }

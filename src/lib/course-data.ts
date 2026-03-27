@@ -1,4 +1,4 @@
-import { CodexSubtopic, DownloadAsset, Module, StorySection } from "@/types/course";
+import { CodexSubtopic, DownloadAsset } from "@/types/course";
 
 export const brandConfig = {
   name: "Ananseum",
@@ -14,17 +14,17 @@ export const downloads: DownloadAsset[] = [
     category: "Learner Pack",
     audience: "learner",
     description: "A concise overview of the two-day course, learning outcomes, and pacing.",
-    file: "/downloads/learner/course-guide.md",
-    type: "Markdown",
+    file: "/downloads/learner/course-guide.pdf",
+    type: "PDF",
   },
   {
     id: "module-summaries",
     title: "Module Summaries",
     category: "Learner Pack",
     audience: "learner",
-    description: "One-page summaries of all twelve modules for post-session review.",
-    file: "/downloads/learner/module-summaries.md",
-    type: "Markdown",
+    description: "Compact summaries of the seven core course chapters for post-session review.",
+    file: "/downloads/learner/module-summaries.pdf",
+    type: "PDF",
   },
   {
     id: "facilitator-notes",
@@ -41,8 +41,8 @@ export const downloads: DownloadAsset[] = [
     category: "Worksheet",
     audience: "learner",
     description: "Discussion prompts, review rubrics, and space to capture group outputs.",
-    file: "/downloads/learner/exercise-workbook.md",
-    type: "Markdown",
+    file: "/downloads/learner/exercise-workbook.pdf",
+    type: "PDF",
   },
   {
     id: "pilot-blueprint",
@@ -50,8 +50,8 @@ export const downloads: DownloadAsset[] = [
     category: "Template",
     audience: "learner",
     description: "A fillable template for designing one practical AI pilot workflow.",
-    file: "/downloads/learner/pilot-blueprint-template.md",
-    type: "Markdown",
+    file: "/downloads/learner/pilot-blueprint-template.pdf",
+    type: "PDF",
   },
   {
     id: "resource-sheet",
@@ -59,8 +59,8 @@ export const downloads: DownloadAsset[] = [
     category: "Resource",
     audience: "learner",
     description: "Recommended readings, official docs, and implementation references.",
-    file: "/downloads/learner/resource-sheet.md",
-    type: "Markdown",
+    file: "/downloads/learner/resource-sheet.pdf",
+    type: "PDF",
   },
   {
     id: "delivery-runbook",
