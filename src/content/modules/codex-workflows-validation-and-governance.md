@@ -1,7 +1,7 @@
 ---
 slug: codex-workflows-validation-and-governance
 day: 1
-order: 3
+order: 4
 title: Codex Workflows, Validation, and Governance
 duration: 95 MINUTES
 audience: Executive cohort

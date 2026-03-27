@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { brandConfig, getDownloadById, getDownloadsForAudience, chapterStories } from "@/lib/course-data";
+import { brandConfig, getDownloadById, getDownloadsForAudience, chapterStories, codexSubtopics, llmSubtopics, openclawSubtopics } from "@/lib/course-data";
 import { learnerContentMap, learnerInterstitials, LearnerTabUI } from "@/lib/learner-content";
 import type { Module, StorySection } from "@/types/course";
+import { KeywordRow } from "@/components/keyword-tooltip";
 
 // Define the CoachState type
 type CoachState = {
@@ -194,6 +195,78 @@ function ChapterStoryPanel({ moduleSlug, presenterMode }: { moduleSlug: string; 
   );
 }
 
+const CODEX_SLUG = "codex-workflows-validation-and-governance";
+const LLM_SLUG = "ai-fundamentals-and-the-llm-shift";
+const OPENCLAW_SLUG = "openclaw-orchestration-skills-and-security";
+const SUBTOPIC_SLUGS: Record<string, typeof codexSubtopics> = {
+  [CODEX_SLUG]: codexSubtopics,
+  [LLM_SLUG]: llmSubtopics,
+  [OPENCLAW_SLUG]: openclawSubtopics,
+};
+
+function SubtopicsPanel({ subtopics }: { subtopics: typeof codexSubtopics }) {
+  const [page, setPage] = useState(0);
+  const topic = subtopics[page];
+  if (!topic) return null;
+
+  return (
+    <div className="subtopic-container">
+      <div className="subtopic-pagination">
+        <button
+          className="btn-secondary subtopic-nav-btn"
+          disabled={page === 0}
+          onClick={() => setPage(page - 1)}
+        >
+          ← Prev
+        </button>
+        <span className="subtopic-page-label">{topic.label}</span>
+        <button
+          className="btn-secondary subtopic-nav-btn"
+          disabled={page === subtopics.length - 1}
+          onClick={() => setPage(page + 1)}
+        >
+          Next →
+        </button>
+      </div>
+
+      <div className="subtopic-header">
+        <h3 className="subtopic-title">{topic.title}</h3>
+        <p className="subtopic-summary">{topic.summary}</p>
+      </div>
+
+      <div className="subtopic-card-grid">
+        <div className="module-card-clean">
+          <h3>Core Idea</h3>
+          <ul>{topic.cards.coreIdea.map((c, i) => <li key={i}>{c}</li>)}</ul>
+        </div>
+        <div className="module-card-clean">
+          <h3>What This Establishes</h3>
+          <p>{topic.cards.establishes}</p>
+        </div>
+        <div className="module-card-clean">
+          <h3>Key Learner Takeaways</h3>
+          <ul>{topic.cards.takeaways.map((t, i) => <li key={i}>{t}</li>)}</ul>
+        </div>
+        <div className="module-card-clean">
+          <h3>Why It Matters</h3>
+          <p>{topic.cards.whyItMatters}</p>
+        </div>
+      </div>
+
+      <div className="subtopic-progress-dots">
+        {subtopics.map((_, i) => (
+          <button
+            key={i}
+            className={`subtopic-dot ${i === page ? "active" : ""}`}
+            onClick={() => setPage(i)}
+            aria-label={`Go to subtopic ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function PresentationShell({
   initialModules,
   initialStorySections,
@@ -202,8 +275,35 @@ export function PresentationShell({
   initialStorySections: StorySection[];
 }) {
   const [activeSection, setActiveSection] = useState("home");
-  const [presenterMode, setPresenterMode] = useState(true);
+  const [presenterMode, setPresenterMode] = useState(false);
+  const [showPwModal, setShowPwModal] = useState(false);
+  const [pwInput, setPwInput] = useState("");
+  const [pwError, setPwError] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  const TUTOR_PW = "Sk983446c!!";
+
+  function handleTutorToggle() {
+    if (presenterMode) {
+      setPresenterMode(false);
+    } else {
+      setShowPwModal(true);
+      setPwInput("");
+      setPwError(false);
+    }
+  }
+
+  function handlePwSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (pwInput === TUTOR_PW) {
+      setPresenterMode(true);
+      setShowPwModal(false);
+      setPwInput("");
+      setPwError(false);
+    } else {
+      setPwError(true);
+    }
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -236,11 +336,35 @@ export function PresentationShell({
         <nav className="topbar-actions">
           <div className="mode-tabs">
             <button className={!presenterMode ? "active" : ""} onClick={() => setPresenterMode(false)}>Learner Mode</button>
-            <button className={presenterMode ? "active" : ""} onClick={() => setPresenterMode(true)}>Tutor Mode</button>
+            <button className={presenterMode ? "active" : ""} onClick={handleTutorToggle}>Tutor Mode</button>
           </div>
           <Link href="/downloads" className="btn-outline">Downloads Hub</Link>
         </nav>
       </header>
+
+      {showPwModal && (
+        <div className="pw-modal-overlay" onClick={() => setShowPwModal(false)}>
+          <div className="pw-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Tutor Access</h3>
+            <p>Enter the facilitator password to access Tutor Mode.</p>
+            <form onSubmit={handlePwSubmit}>
+              <input
+                type="password"
+                value={pwInput}
+                onChange={(e) => { setPwInput(e.target.value); setPwError(false); }}
+                placeholder="Password"
+                autoFocus
+                className={pwError ? "pw-input pw-input-error" : "pw-input"}
+              />
+              {pwError && <span className="pw-error-msg">Incorrect password</span>}
+              <div className="pw-modal-actions">
+                <button type="button" className="btn-secondary" onClick={() => setShowPwModal(false)}>Cancel</button>
+                <button type="submit" className="btn-primary">Unlock</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="course-layout">
         <aside className="toc-sidebar">
@@ -318,33 +442,38 @@ export function PresentationShell({
                     </div>
 
                     <ChapterStoryPanel moduleSlug={currentModule.slug} presenterMode={presenterMode} />
-                    
-                    {presenterMode ? (
-                      <>
-                        <div className="module-grid-new">
-                          <div className="module-card-clean" style={{ gridColumn: 'span 1' }}>
-                            <h3>Core Idea</h3>
-                            <ul>{currentModule.coreIdea.map((c, i) => <li key={i}>{c}</li>)}</ul>
-                          </div>
-                          <div className="module-card-clean">
-                            <h3>What this section establishes</h3>
-                            <p>{currentModule.deliveryLead}</p>
-                          </div>
-                        </div>
+                    <KeywordRow keywords={currentModule.keywords} />
 
-                        <details className="module-accordion" open={false}>
-                          <summary>Key points to impart</summary>
-                          <div className="accordion-content">
-                            <ul>{currentModule.talkingPoints.map((t, i) => <li key={i}>{t}</li>)}</ul>
+                    {presenterMode ? (
+                      SUBTOPIC_SLUGS[currentModule.slug] ? (
+                        <SubtopicsPanel subtopics={SUBTOPIC_SLUGS[currentModule.slug]} />
+                      ) : (
+                        <>
+                          <div className="module-grid-new">
+                            <div className="module-card-clean" style={{ gridColumn: 'span 1' }}>
+                              <h3>Core Idea</h3>
+                              <ul>{currentModule.coreIdea.map((c, i) => <li key={i}>{c}</li>)}</ul>
+                            </div>
+                            <div className="module-card-clean">
+                              <h3>What this section establishes</h3>
+                              <p>{currentModule.deliveryLead}</p>
+                            </div>
                           </div>
-                        </details>
-                        <details className="module-accordion">
-                          <summary>Why it matters strategically</summary>
-                          <div className="accordion-content">
-                            <p>{currentModule.takeaway}</p>
-                          </div>
-                        </details>
-                      </>
+
+                          <details className="module-accordion" open={false}>
+                            <summary>Key points to impart</summary>
+                            <div className="accordion-content">
+                              <ul>{currentModule.talkingPoints.map((t, i) => <li key={i}>{t}</li>)}</ul>
+                            </div>
+                          </details>
+                          <details className="module-accordion">
+                            <summary>Why it matters strategically</summary>
+                            <div className="accordion-content">
+                              <p>{currentModule.takeaway}</p>
+                            </div>
+                          </details>
+                        </>
+                      )
                     ) : learnerContentMap[currentModule.slug] ? (
                       <LearnerTabUI data={learnerContentMap[currentModule.slug]} />
                     ) : (

@@ -24,6 +24,19 @@ export type Module = {
   keywords: string[];
 };
 
+export type CodexSubtopic = {
+  id: string;
+  label: string;
+  title: string;
+  summary: string;
+  cards: {
+    coreIdea: string[];
+    establishes: string;
+    takeaways: string[];
+    whyItMatters: string;
+  };
+};
+
 export type DownloadAsset = {
   id: string;
   title: string;

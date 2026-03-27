@@ -1,7 +1,7 @@
 ---
 slug: ai-systems-rag-tools-memory-evaluation
 day: 2
-order: 4
+order: 5
 title: AI Systems, RAG, Tools, Memory, and Evaluation
 duration: 90 MINUTES
 audience: Executive cohort

@@ -1,7 +1,7 @@
 ---
 slug: ai-landscape-and-systems
 day: 1
-order: 1
+order: 2
 title: AI Landscape and Systems Model
 duration: 40 MINUTES
 audience: Executive cohort

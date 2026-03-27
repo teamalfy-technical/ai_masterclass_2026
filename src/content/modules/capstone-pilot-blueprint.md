@@ -1,7 +1,7 @@
 ---
 slug: capstone-pilot-blueprint
 day: 2
-order: 6
+order: 7
 title: Capstone Pilot Blueprint
 duration: 35 MINUTES
 audience: Executive cohort

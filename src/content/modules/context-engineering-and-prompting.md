@@ -1,7 +1,7 @@
 ---
 slug: context-engineering-and-prompting
 day: 1
-order: 2
+order: 3
 title: Context Engineering and Prompting
 duration: 90 MINUTES
 audience: Executive cohort

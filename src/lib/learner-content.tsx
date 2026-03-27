@@ -9,6 +9,94 @@ export type LearnerContentData = {
 };
 
 export const learnerContentMap: Record<string, LearnerContentData> = {
+  "ai-fundamentals-and-the-llm-shift": {
+    overview: (
+      <>
+        <p>This chapter gives you the foundation. Before you learn to prompt effectively, use Codex, or design AI workflows, you need to understand what AI actually is, how large language models work, and why they behave the way they do.</p>
+        <p><strong>Key concepts covered:</strong></p>
+        <ul className="signal-list" style={{ marginTop: '1rem' }}>
+          <li><strong>AI is an umbrella term.</strong> Many very different technologies get called AI — understanding the landscape prevents confusion.</li>
+          <li><strong>LLMs are prediction engines.</strong> A large language model predicts the most likely next token given a sequence of input tokens. It does not understand, reason, or know things the way a human does.</li>
+          <li><strong>Fluency is not understanding.</strong> A model can produce eloquent, confident, well-structured text and still be wrong.</li>
+          <li><strong>Hallucinations are structural.</strong> LLMs generate plausible-sounding content that is sometimes factually incorrect because they optimise for likelihood, not truth.</li>
+          <li><strong>Systems beat single prompts.</strong> Reliable AI depends on workflows that combine the model with context, tools, retrieval, validation, and human review.</li>
+        </ul>
+      </>
+    ),
+    example: (
+      <>
+        <p>Imagine you ask an AI assistant: <em>"What year did Acme Corp merge with GlobalTech?"</em></p>
+        <p>A <strong>plain LLM</strong> might give a confident answer — say, "2019" — even if the merger never happened. It generates text that sounds plausible based on patterns in its training data.</p>
+        <p>A <strong>system-level approach</strong> would:</p>
+        <ul>
+          <li>search a verified corporate database for the actual record</li>
+          <li>return the answer only if a source is found</li>
+          <li>say "I could not find this information" if no record exists</li>
+          <li>cite the source so a human can verify</li>
+        </ul>
+        <p>The difference is not intelligence. It is <strong>grounding</strong> — connecting the model to reality instead of relying on prediction alone.</p>
+        <p>This is why later chapters on context engineering, RAG, Codex, and OpenClaw matter: they show you how to build the system around the model.</p>
+      </>
+    ),
+    prompts: (
+      <>
+        <p className="eyebrow">Explore what the model knows and does not know</p>
+        <pre className="prompt-block"><code>{`Explain the difference between machine learning,
+deep learning, generative AI, and a large language model.
+Use plain language suitable for a business audience.
+Give one practical example for each.
+Keep the total explanation under 300 words.`}</code></pre>
+        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Test the model's limits</p>
+        <pre className="prompt-block"><code>{`I am going to ask you a factual question. Before answering:
+1. State your confidence level (high, medium, low)
+2. Explain what you are basing your answer on
+3. Say clearly if you are uncertain or guessing
+4. If you do not know, say so
+
+Question: [insert a question about something recent,
+niche, or organisation-specific]`}</code></pre>
+        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Map a task as a system, not a prompt</p>
+        <pre className="prompt-block"><code>{`Help me map this work task into an AI system.
+
+Task: [describe the task]
+Inputs: [what information comes in]
+Desired output: [what a good result looks like]
+
+Return:
+1. what the model should do
+2. what must come from data or retrieval
+3. where human review should happen
+4. what tools or actions are needed
+5. what could go wrong
+6. the smallest useful pilot scope`}</code></pre>
+      </>
+    ),
+    mistakes: (
+      <>
+        <ul>
+          <li>Assuming the model has up-to-date knowledge — it does not; training data has a cutoff</li>
+          <li>Trusting confident-sounding answers without verification</li>
+          <li>Treating the model as a reasoning engine instead of a pattern-completion engine</li>
+          <li>Expecting consistency — the same question may produce different answers</li>
+          <li>Skipping the "what is actually doing the work?" question when evaluating AI demos</li>
+          <li>Conflating impressive output with reliable workflow</li>
+        </ul>
+      </>
+    ),
+    practice: (
+      <>
+        <p><strong>Exercise 1:</strong> Pick a factual question from your work domain (something specific and verifiable). Ask the model. Then verify its answer independently. Note where it was right, where it was wrong, and where it was confident despite being wrong.</p>
+        <p><strong>Exercise 2:</strong> Take one recurring task from your team. Break it into:</p>
+        <ul>
+          <li>what requires reasoning</li>
+          <li>what requires retrieval from real data</li>
+          <li>what requires action (sending, updating, logging)</li>
+          <li>what needs human approval</li>
+        </ul>
+        <p>That is your first systems map — and it connects directly to the rest of the course.</p>
+      </>
+    )
+  },
   "ai-landscape-and-systems": {
     overview: (
       <>
@@ -195,79 +283,99 @@ Then rewrite the prompt so it is more likely to succeed.</code></pre>
   "codex-workflows-validation-and-governance": {
     overview: (
       <>
-        <p>In this course, think of <strong>Codex workflows</strong> as AI-assisted coding and technical build workflows. The same lesson applies here as everywhere else: AI can generate useful drafts quickly, but it still needs clear specs, validation, and control.</p>
-        <p>A good mental model is: <strong>AI can help produce code. It does not remove the need for engineering discipline.</strong></p>
-        <p><strong>A safe workflow for AI-assisted coding:</strong></p>
+        <p><strong>Codex</strong> is an AI coding agent that runs inside a sandboxed cloud environment. It reads your repository, proposes a plan, writes code, runs tests, and returns a diff for human review.</p>
+        <p>This chapter covers the full Codex workflow: what it is, how to set it up, how to operate it daily, how to configure it for your team, how to validate output, and how to govern it safely.</p>
+        <p><strong>The key mental model:</strong></p>
         <ul className="signal-list" style={{ marginTop: '1rem' }}>
-          <li><strong>1. Define the task clearly:</strong> What should the code do?</li>
-          <li><strong>2. Ask for a plan first:</strong> Do not start with "write the full solution."</li>
-          <li><strong>3. Generate tests or acceptance criteria:</strong> Know what correct behavior looks like before trusting the code.</li>
-          <li><strong>4. Build in small increments:</strong> One function, one endpoint, one component at a time.</li>
-          <li><strong>5. Validate:</strong> Run tests, lint, type check, and inspect edge cases.</li>
-          <li><strong>6. Review governance and security:</strong> Check secrets, dependencies, permissions, logs, and failure paths.</li>
+          <li><strong>Codex is not autocomplete</strong> — it is an agent that works inside your repo and returns reviewable results</li>
+          <li><strong>The core operating loop:</strong> plan → implement → run checks → review diff → approve or revise</li>
+          <li><strong>Configuration makes it repeatable:</strong> AGENTS.md for repo guidance, MCP for external context, skills for reusable workflows</li>
+          <li><strong>Validation makes it safe:</strong> tests, linting, builds, diff review, and acceptance criteria</li>
+          <li><strong>Governance makes it approved:</strong> sandboxing, writable roots, network controls, and human review</li>
         </ul>
+        <p>Codex is available via the ChatGPT app, VS Code / IDE integration, and CLI — each suited to different workflows.</p>
       </>
     ),
     example: (
       <>
-        <p>Suppose you want a small Python script to process a CSV of invoices.</p>
-        <p><strong>Weak prompt</strong></p>
-        <pre className="prompt-block"><code>Write Python code to process this invoice file.</code></pre>
-        <p><strong>Better prompt</strong></p>
-        <pre className="prompt-block"><code>You are assisting with a Python utility.
-
-Task: Create a script that reads a CSV of invoices and flags rows with missing invoice number, vendor, or amount.
-Environment: Python 3.11. Standard library only.
-
-Requirements:
-- input file path from command line
-- output a cleaned CSV and a validation report
-- do not crash on malformed rows
-- include unit tests
-- explain edge cases
-
-Process:
-1. propose the approach
-2. write test cases
-3. write the implementation
-4. explain assumptions and risks
-
-Acceptance criteria: deterministic output, malformed rows handled gracefully, tests cover missing fields and invalid numeric values.</code></pre>
+        <p><strong>The everyday Codex operating loop in practice:</strong></p>
+        <p>Suppose you need to add input validation to an existing API endpoint.</p>
+        <p><strong>Step 1: Ask for a plan</strong></p>
+        <pre className="prompt-block"><code>{`/plan Add input validation to the /api/users endpoint.
+Validate: name (required, string, max 100 chars),
+email (required, valid format), role (optional, must be
+"admin" or "member"). Return clear error messages.`}</code></pre>
+        <p><strong>Step 2: Review the plan before implementation</strong></p>
+        <p>Codex returns a plan listing the files it intends to change, the validation approach, and the test cases it will write. You approve or revise.</p>
+        <p><strong>Step 3: Monitor progress and review the diff</strong></p>
+        <pre className="prompt-block"><code>{`/status    — check what Codex is doing
+/diff      — inspect the actual changes line by line
+/review    — ask Codex to self-assess its own work`}</code></pre>
+        <p><strong>Step 4: Run checks and approve</strong></p>
+        <p>Tests pass, lint passes, diff looks correct. You approve the changes as a pull request.</p>
       </>
     ),
     prompts: (
       <>
-        <p className="eyebrow">Spec-to-code</p>
-        <pre className="prompt-block"><code>Turn this requirement into:
-1. a technical plan
-2. test cases
-3. implementation steps
-4. risks and unknowns
+        <p className="eyebrow">Ask Codex to explain before editing</p>
+        <pre className="prompt-block"><code>{`Explain the structure of this codebase. List the main
+directories, entry points, and how data flows through
+the application. Do not make any changes yet.`}</code></pre>
+        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Plan-first task brief</p>
+        <pre className="prompt-block"><code>{`/plan [describe the bounded task]
 
-Requirement:
-[paste requirement]</code></pre>
-        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Code review</p>
-        <pre className="prompt-block"><code>Review this code for: correctness, edge cases, readability, security risks, unnecessary complexity, missing tests. Then suggest the smallest safe improvements.</code></pre>
-        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Refactor without changing behavior</p>
-        <pre className="prompt-block"><code>Refactor the code below for clarity and maintainability. Do not change behavior. Show: 1. what you changed, 2. why you changed it, 3. any risks to verify with tests.</code></pre>
+Requirements:
+- [specific requirement 1]
+- [specific requirement 2]
+- [constraint or restriction]
+
+Acceptance criteria:
+- [what a correct result looks like]
+- [edge cases to handle]`}</code></pre>
+        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Key slash commands</p>
+        <pre className="prompt-block"><code>{`/plan         — ask Codex to propose before changing
+/status       — check progress on the current task
+/diff         — inspect the changes made so far
+/review       — request a self-assessment
+/model        — select the model tier
+/permissions  — restrict file and network access`}</code></pre>
+        <p className="eyebrow" style={{marginTop:'1.5rem'}}>AGENTS.md — durable repo guidance</p>
+        <pre className="prompt-block"><code>{`# AGENTS.md (place in repo root)
+- Follow the existing code style and naming conventions
+- Always write tests for new functions
+- Do not modify infrastructure or deployment files
+- Use TypeScript strict mode
+- Prefer small, focused commits`}</code></pre>
       </>
     ),
     mistakes: (
       <>
         <ul>
-          <li>Using AI when requirements are unclear</li>
-          <li>Forgetting that the system depends on hidden business rules</li>
-          <li>Overlooking security-sensitive decisions</li>
-          <li>Trusting code needs production-level performance tuning without real context</li>
-          <li>Deploying without a human checking the output</li>
+          <li>Skipping the plan step and letting Codex start changing files immediately</li>
+          <li>Accepting code because tests pass, without reviewing the diff</li>
+          <li>Giving Codex overly broad tasks instead of bounded, specific ones</li>
+          <li>Forgetting to set AGENTS.md — every task starts from zero without it</li>
+          <li>Granting full network access when the task does not require it</li>
+          <li>Treating Codex output as finished code instead of a pull request to review</li>
+          <li>Skipping validation on edge cases — AI handles the happy path well but often misses boundaries</li>
         </ul>
       </>
     ),
     practice: (
       <>
-        <p>Choose a small, non-critical technical task: rename files consistently, transform a CSV, parse logs, or format a JSON export.</p>
-        <p>Ask the AI for: 1. a plan, 2. tests, 3. code, 4. review notes.</p>
-        <p>This helps learners see that <strong>validation is part of the workflow, not an optional extra</strong>.</p>
+        <p><strong>Guided exercise: Run the Codex operating loop once</strong></p>
+        <ol>
+          <li>Connect Codex to a sample or personal repo</li>
+          <li>Ask Codex to explain the codebase structure (read-only first task)</li>
+          <li>Assign a bounded task: add input validation to one endpoint or function</li>
+          <li>Use <code>/plan</code> to review the approach before implementation</li>
+          <li>Use <code>/status</code> and <code>/diff</code> to monitor and inspect</li>
+          <li>Run tests, lint, and type checks</li>
+          <li>Review the diff line by line</li>
+          <li>Approve or request revisions</li>
+        </ol>
+        <p><strong>Success criteria:</strong> build passes, tests pass, diff is reviewed, and the change is correct.</p>
+        <p><strong>Take-home:</strong> repeat this exercise with one real task from your own codebase within the next 7 days.</p>
       </>
     )
   },
@@ -354,56 +462,95 @@ Return:
   "openclaw-orchestration-skills-and-security": {
     overview: (
       <>
-        <p>In this course, <strong>OpenClaw</strong> is the orchestration layer: the part that coordinates models, tools, skills, approvals, and system logic into a working AI workflow.</p>
-        <p>A useful learner definition is:</p>
-        <ul>
-          <li><strong>Orchestration decides what happens next.</strong></li>
-          <li><strong>Skills package repeatable capabilities.</strong></li>
-          <li><strong>Security controls what is allowed.</strong></li>
+        <p>Day 2 moves from models to systems. <strong>OpenClaw</strong> is the concrete example of that shift — a self-hosted, multi-channel AI assistant with persistence, routing, tools, skills, and governance built in.</p>
+        <p><strong>Key architecture concepts:</strong></p>
+        <ul className="signal-list" style={{ marginTop: '1rem' }}>
+          <li><strong>Gateway</strong> — the control plane and single source of truth. All messages, sessions, and routing flow through it.</li>
+          <li><strong>Sessions</strong> — persistent conversations that survive across messages, channels, and time.</li>
+          <li><strong>Tools</strong> — actions the model can call: search, calculate, query APIs, run code.</li>
+          <li><strong>Skills</strong> — markdown guidance files (SKILL.md) that teach the agent when and how to use tools.</li>
+          <li><strong>Plugins</strong> — packaged bundles of channels, providers, tools, and skills for easy installation.</li>
+          <li><strong>Dashboard</strong> — the operator surface for monitoring, configuration, and session management.</li>
         </ul>
-        <p>A single prompt handles one interaction. Orchestration handles a sequence of interactions (classify request, route to skill, retrieve context, call tool, draft output, log result).</p>
+        <p style={{ marginTop: '1rem' }}><strong>Why OpenClaw instead of plain chat?</strong> Plain chat is stateless, single-channel, and uncontrolled. OpenClaw adds persistence, routing, multi-channel continuity, tool access, skill guidance, security boundaries, and operator control.</p>
       </>
     ),
     example: (
       <>
-        <p>Imagine a procurement intake assistant. A user submits: <em>"We want to onboard a new vendor for document processing."</em></p>
-        <p>An orchestrated workflow could:</p>
-        <ol>
-          <li>classify the request type</li>
-          <li>retrieve procurement policy</li>
-          <li>use a vendor risk skill</li>
-          <li>ask follow-up questions if key fields are missing</li>
-          <li>draft a recommendation</li>
-          <li>send high-risk cases for review</li>
-          <li>log the decision</li>
-        </ol>
-        <p>That is not one prompt. It is an orchestrated flow.</p>
+        <p><strong>Scenario:</strong> Your team wants an internal support assistant that can answer policy questions, check leave balances, and route complex queries to HR.</p>
+        <p>With <strong>plain chat</strong>, each conversation starts from scratch. The assistant has no memory, no access to internal systems, and no way to route requests.</p>
+        <p>With <strong>OpenClaw</strong>:</p>
+        <ul>
+          <li>The Gateway maintains persistent sessions — the assistant remembers prior context</li>
+          <li>A <em>policy-lookup</em> skill retrieves answers from your HR knowledge base (RAG)</li>
+          <li>A <em>leave-balance</em> tool queries the HR system via API</li>
+          <li>Routing rules send complex requests to a human HR review queue</li>
+          <li>Users interact via Slack, Teams, or the web dashboard — same session, same context</li>
+          <li>Token auth and pairing ensure only authorised team members can access it</li>
+          <li>The operator dashboard shows session logs, tool calls, and routing decisions</li>
+        </ul>
+        <p>That is the difference between a chat interface and a governed AI system.</p>
       </>
     ),
     prompts: (
       <>
-        <p className="eyebrow">Design a skill</p>
-        <pre className="prompt-block"><code>Design a reusable AI skill for this task: [describe task]. Include: purpose, ideal input, required context, tools needed, output format, constraints, failure conditions, when to escalate to a human, 3 security risks.</code></pre>
-        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Design an orchestrated workflow</p>
-        <pre className="prompt-block"><code>Map this business process into an orchestrated AI workflow. Return: 1. trigger, 2. decision points, 3. skills required, 4. tool calls, 5. human approvals, 6. logging/audit needs, 7. failure handling.</code></pre>
-        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Red-team the workflow</p>
-        <pre className="prompt-block"><code>Review this AI workflow for security and control risks. Check for: prompt injection risk, overbroad permissions, data leakage, missing approvals, unclear audit trail, weak failure handling, inappropriate memory persistence. Then recommend the smallest effective safeguards.</code></pre>
+        <p className="eyebrow">Map a workflow for OpenClaw</p>
+        <pre className="prompt-block"><code>{`I want to design an AI assistant workflow using OpenClaw.
+
+Workflow: [describe the recurring workflow]
+Users: [who interacts with this assistant]
+Channels: [where users already work — Slack, Teams, web, CLI]
+
+Return:
+1. What triggers a session
+2. What context the assistant needs (retrieval, API, memory)
+3. Which tools it should call
+4. Which skills would guide its behaviour
+5. Where human review should happen
+6. What security controls are needed
+7. How you would measure success`}</code></pre>
+        <p className="eyebrow" style={{marginTop:'1.5rem'}}>Evaluate OpenClaw fit</p>
+        <pre className="prompt-block"><code>{`I am considering whether OpenClaw is the right tool
+for this use case: [describe use case].
+
+Evaluate whether it needs:
+- persistence across interactions
+- multi-channel access
+- tool integration
+- deterministic routing
+- operator control and audit logging
+- security boundaries
+
+If most answers are "yes," OpenClaw is a good fit.
+If most are "no," a simpler solution may be enough.`}</code></pre>
       </>
     ),
     mistakes: (
       <>
         <ul>
-          <li>Giving one skill too many unrelated jobs</li>
-          <li>Allowing tool access without clear permissions</li>
-          <li>Skipping audit and logging</li>
-          <li>Assuming retrieved content is always safe or trustworthy</li>
-          <li>Forgetting that "helpful" systems can still leak data or take the wrong action</li>
+          <li>Treating OpenClaw as "just another chat UI" — it is an orchestration layer, not an interface</li>
+          <li>Skipping the onboarding wizard and trying to configure everything manually</li>
+          <li>Exposing the Gateway to the network before configuring authentication</li>
+          <li>Giving tools broad permissions without defining skill constraints</li>
+          <li>Forgetting that sessions persist — sensitive data may carry over between interactions</li>
+          <li>Not reviewing the operator dashboard logs to understand what the assistant actually did</li>
+          <li>Assuming the assistant is deterministic without checking routing rules</li>
         </ul>
       </>
     ),
     practice: (
       <>
-        <p>Choose a workflow with moderate risk, such as procurement intake, policy Q&A, or request triage. Break it into: route, retrieve, decide, act, review, log. That is the beginning of an orchestrated design.</p>
+        <p><strong>Exercise 1 — First-Run Walkthrough:</strong> If you have OpenClaw installed, complete the setup flow: install → onboard → verify Gateway → open dashboard → send first message. Note what you found easy and what was confusing.</p>
+        <p><strong>Exercise 2 — Workflow Mapping:</strong> Choose one recurring workflow from your team. Map it into:</p>
+        <ul>
+          <li>Trigger (what starts the workflow)</li>
+          <li>Context (what information is needed)</li>
+          <li>Tools (what actions the assistant takes)</li>
+          <li>Skills (what guidance the assistant follows)</li>
+          <li>Routing (when does a human review)</li>
+          <li>Security (who can access, what data flows)</li>
+        </ul>
+        <p>This workflow map becomes the starting point for your capstone pilot blueprint.</p>
       </>
     )
   }
